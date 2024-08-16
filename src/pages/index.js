@@ -13,6 +13,7 @@ const Home = () => {
       ...todo,
       {
         text: todoInput,
+        isDone: false,
         id: "id" + Math.random().toString(16).slice(2),
       },
     ]);
@@ -22,9 +23,16 @@ const Home = () => {
     setTodo(todo.filter((item) => item.id !== id));
   };
 
-  // const checked = (id) => {
-  //   setTodo(todo.filter((item) => item.id !== id));
-  // };
+  const handleChange = (id) => {
+    const updatedTodo = todo.map((item) => {
+      if (item.id === id) {
+        return { ...item, isDone: !item.isDone };
+      }
+      return item;
+    });
+
+    setTodo(updatedTodo);
+  };
 
   return (
     <div>
@@ -39,8 +47,18 @@ const Home = () => {
         {todo.map((el, index) => {
           return (
             <div key={index}>
-              {el.text}
-              <input type="checkbox" />
+              <span
+                style={{
+                  textDecoration: el.isDone === true ? "line-through" : "none",
+                }}
+              >
+                {el.text}
+              </span>
+              <input
+                type="checkbox"
+                checked={el.isDone}
+                onChange={() => handleChange(el.id)}
+              />
               <button onClick={() => handleDelete(el.id)}>Delete</button>
             </div>
           );
